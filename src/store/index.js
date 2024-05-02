@@ -40,11 +40,15 @@ export default new Vuex.Store({
 
       localStorage.setItem('formData', JSON.stringify(state.formData));
       localStorage.setItem('idCounter', state.idCounter);
+    },
+    updateLocalFormData(state) {
+      state.localFormData = [...state.formData];
     }
   },
   actions: {
     saveFormData({ commit }, data) {
       commit('addFormData', data);
+      commit('updateLocalFormData');
     }
   },
   getters: {

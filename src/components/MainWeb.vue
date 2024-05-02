@@ -8,7 +8,7 @@
 
   <div class="main-body">
     <Button buttonName="Добавить" @show="showModal" />
-    <Table :formData="formData" />
+    <Table />
     <Modal v-show="isModalVisible" @close="closeModal" @dataReceived="saveData" />
   </div>
 

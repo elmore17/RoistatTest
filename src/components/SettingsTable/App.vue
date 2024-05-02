@@ -20,7 +20,6 @@ table thead th {
     font-size: 14px;
     border-top: 1px solid #ddd;
 }
-
 </style>
 
 <template>
@@ -39,21 +38,17 @@ table thead th {
 
 <script>
 import UserRow from './UserRow.vue';
+import { mapGetters } from 'vuex';
 export default {
     name: 'Table',
-    props: ['formData'],
     components: {
         UserRow
     },
     data() {
         return {
-            localFormData: [],
             sortByColumn: null,
             sortOrder: 1
         };
-    },
-    mounted() {
-        this.localFormData = [...this.formData];
     },
     methods: {
         sortBy(column) {
@@ -67,17 +62,19 @@ export default {
             this.sortFormData();
         },
         sortFormData() {
-            const sortedData = [...this.localFormData];
+            const sortedData = [...this.getFormData];
 
             sortedData.sort((a, b) => {
                 const valA = this.getValueByPath(a, this.sortByColumn);
                 const valB = this.getValueByPath(b, this.sortByColumn);
                 return valA > valB ? this.sortOrder : -this.sortOrder;
             });
-
-            this.localFormData = sortedData;
+            console.log(sortedData)
+            this.$store.dispatch('saveFormData', sortedData);
         },
         getValueByPath(obj, path) {
+            if (!path) return null; // Добавляем проверку на null
+
             const keys = path.split('.');
             const value = keys.reduce((acc, key) => {
                 return acc && acc[key];
@@ -86,8 +83,17 @@ export default {
         }
     },
     computed: {
+        ...mapGetters(['getFormData']),
         sortedFormData() {
-            return this.localFormData;
+            const sortedData = [...this.getFormData];
+
+            sortedData.sort((a, b) => {
+                const valA = this.getValueByPath(a, this.sortByColumn);
+                const valB = this.getValueByPath(b, this.sortByColumn);
+                return valA > valB ? this.sortOrder : -this.sortOrder;
+            });
+
+            return sortedData;
         }
     }
 }

@@ -14,6 +14,7 @@ tr:hover {
 </style>
 
 <template>
+    
     <tbody>
         <tr @click="toggleChildren" class="row-table">
             <td class="el-name">
